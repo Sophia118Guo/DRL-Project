@@ -108,7 +108,7 @@ action_space = env.action_space()
 
 # Agent
 dqn = Agent(args, env)
-dqn.load_opponent_model("G6/model_ori.pth")
+# dqn.load_opponent_model("G6/model_ori.pth")
 
 # If a model is provided, and evaluate is false, presumably we want to resume, so try to load memory
 if args.memory and os.path.exists(args.memory):
