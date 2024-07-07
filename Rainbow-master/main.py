@@ -11,7 +11,8 @@ import numpy as np
 import torch
 from tqdm import trange
 
-from agent import Agent
+from agent import AgentR
+from agent import AgentL
 from env import Env
 from memory import ReplayMemory
 from test import test
@@ -106,9 +107,14 @@ env = Env(args)
 env.train()
 action_space = env.action_space()
 
-# Agent
-dqn = Agent(args, env)
+# AgentR
+dqn = AgentR(args, env)
 # dqn.load_opponent_model("G6/model_ori.pth")
+
+# AgentL
+if players == 2:
+  args.model = argsmodelL
+  dqn2 = AgentL(args, env)
 
 # If a model is provided, and evaluate is false, presumably we want to resume, so try to load memory
 if args.memory and os.path.exists(args.memory):
