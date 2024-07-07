@@ -141,7 +141,11 @@ while T < args.evaluation_size:
 
 if args.evaluate:
   dqn.eval()  # Set DQN (online network) to evaluation mode
-  avg_reward, avg_Q = test(args,env, 0, dqn, val_mem, metrics, results_dir, evaluate=True)  # Test
+  if players == 1:
+  avg_reward, avg_Q = test(args, env, 0, dqn, metrics, results_dir, evaluate=True)  # Test
+if players == 2:
+  avg_reward, avg_Q = test(args, env, 0, [dqn,dqn2], metrics, results_dir, evaluate=True)  # Test
+  #avg_reward, avg_Q = test(args,env, 0, dqn, val_mem, metrics, results_dir, evaluate=True)  # Test
   print('Avg. reward: ' + str(avg_reward) + ' | Avg. Q: ' + str(avg_Q))
 else:
   # Training loop
