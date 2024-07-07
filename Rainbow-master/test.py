@@ -22,8 +22,18 @@ def test(args, env, T, dqn, val_mem, metrics, results_dir, evaluate=False):
       if done:
         state, reward_sum, done = env.reset(), 0, False
 
-      action = dqn.act_e_greedy(state)  # Choose an action ε-greedily
-      state, reward, done, _ = env.step(action)  # Step
+      if env.players == 1 :
+        action = dqn.act_e_greedy(state)  # Choose an action ε-greedily
+        state, reward, done, _ = env.step(action)  # Step
+
+      if env.players == 2:
+        dqn1 = dqn[0]
+        dqn2 = dqn[1]
+        action1 = dqn1.act_e_greedy(state)  # Choose  an action ε-greedily
+        action2 = dqn2.act_e_greedy(torch.flip(state,[2]) )  # Choose an action ε-greedily
+        # print(action)
+        state, reward, done, info = env.step_2P(action1, action2)  # Step
+          
       reward_sum += reward
       if args.render:
         env.render()
