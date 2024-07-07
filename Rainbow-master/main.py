@@ -18,7 +18,7 @@ from memory import ReplayMemory
 from test import test
 
 argsmodelR = "checkpoints/30_June/model.pth"
-argsmodelL = os.path.basename(os.path.dirname(inspect.getfile(AgentL)))+"/model.pth"
+argsmodelL = "G6/model_ori.pth"
 
 # Note that hyperparameters may originally be reported in ATARI game frames instead of agent steps
 parser = argparse.ArgumentParser(description='Rainbow')
