@@ -47,6 +47,27 @@ class Env():
     self.screen = obs
     self.info = info
     return np.array(rew) 
+    
+ def interact_2P(self, act01, act02):
+    
+    act = np.array([1,0,0,0,  0,0,   0,0,  0,0,0,0, 0,0,0,1])
+    
+    if act01 == 2 or act01 ==4:
+        act[4] = 1
+    if act01 == 3 or act01 ==5:
+        act[5] = 1
+    if act02 == 2 or act02 ==4:
+        act[6] = 1
+    if act02 == 3 or act02 ==5:
+        act[7] = 1
+        
+    act1 = act
+    
+    obs, rew, done, info = self.env.step(act1)
+    self.done = done
+    self.screen = obs
+    self.info = info
+    return np.array(rew)
 
   def _get_state(self):
     state = cv2.resize(cv2.cvtColor(self.screen, cv2.COLOR_BGR2GRAY), (84, 84), interpolation=cv2.INTER_LINEAR)
@@ -86,6 +107,37 @@ class Env():
         
     for t in range(4):
       reward += self.interact(action)
+    
+    
+      if t == 2:
+        frame_buffer[0] = self._get_state()
+      elif t == 3:
+        frame_buffer[1] = self._get_state()
+      done = self.done
+      if done:
+        break
+    observation = frame_buffer.max(0)[0]
+    self.state_buffer.append(observation)
+    # Detect loss of life as terminal in training mode
+    # if self.training:
+    #   lives = self.ale.lives()
+    #   if lives < self.lives and lives > 0:  # Lives > 0 for Q*bert
+    #     self.life_termination = not done  # Only set flag when not truly done
+    #     done = True
+    #   self.lives = lives
+    # Return state, reward, done
+    return torch.stack(list(self.state_buffer), 0), reward, done, self.info
+
+def step_2P(self, action1, action2):
+    # Repeat action 4 times, max pool over last 2 frames
+    frame_buffer = torch.zeros(2, 84, 84, device=self.device)
+    if self.players == 1:
+        reward, done = 0, False
+    if self.players == 2:
+        reward, done = np.array([0.0,0.0]), False    
+        
+    for t in range(4):
+      reward += self.interact_2P(action1, action2)
     
     
       if t == 2:
